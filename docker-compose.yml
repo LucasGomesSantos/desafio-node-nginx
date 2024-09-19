@@ -1,0 +1,40 @@
+version: '3'
+services:
+  node-app:
+    build: ./node-app
+    container_name: node-app
+    networks:
+      - app-network
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+    expose:
+      - "3000"
+    volumes:
+      - ./node-app:/usr/src/app
+
+  db:
+    build: ./mysql
+    container_name: mysql
+    networks:
+      - app-network
+    volumes:
+      - db_data:/var/lib/mysql
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - node-app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
