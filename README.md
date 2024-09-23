@@ -1,4 +1,4 @@
-docker pull luuhgomes/desafio-node-nginx
+docker-compose up --build
 
 Route get http://locahost/ -> Retorna todos os nomes
 
