@@ -6,11 +6,10 @@ services:
     networks:
       - app-network
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - DB_HOST=db
-    expose:
-      - "3000"
     volumes:
       - ./node-app:/usr/src/app
       - /usr/src/app/node_modules
@@ -22,6 +21,11 @@ services:
       - app-network
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck: 
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3 
 
   nginx:
     build: ./nginx
